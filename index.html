@@ -97,7 +97,7 @@
                 type="submit"
                 class="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
-                儲存資料到 Google Sheets
+                儲存資料
             </button>
         </form>
 
@@ -130,7 +130,7 @@
                 // 由於是 no-cors 模式，我們只能假設請求已發送。
                 // 成功發送後，清理表單並給出成功訊息。
                 document.getElementById('dataForm').reset();
-                messageElement.textContent = '✅ 資料已成功發送！請檢查您的 Google Sheets 確認儲存。';
+                messageElement.textContent = '✅ 資料已成功發送！確認儲存。';
                 messageElement.className = 'text-center font-medium text-green-600';
                 
                 // 提交成功後，確保「出庫 (1)」按鈕保持選中
@@ -173,3 +173,4 @@
 
 </body>
 </html>
+
