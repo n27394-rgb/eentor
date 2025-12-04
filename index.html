@@ -1,77 +1,175 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-Hant">
 <head>
-    <title>GitHub Pages 資料儲存範例</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>器械出入庫資料記錄</title>
+    <!-- 載入 Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* 確保字體清晰易讀 */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f9fb;
+        }
+        /* 針對多行輸入區域（器械條碼）的樣式調整 */
+        textarea {
+            resize: vertical;
+        }
+        /* 隱藏 radio button 的原生外觀 */
+        input[type="radio"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            border: 2px solid theme('colors.gray.400');
+            transition: all 0.2s;
+        }
+        /* 選中時的樣式 */
+        input[type="radio"]:checked {
+            border-width: 5px;
+            border-color: theme('colors.blue.600');
+        }
+        /* 針對歸還按鈕選中時的樣式 */
+        #Messagee_in:checked {
+            border-color: theme('colors.green.600');
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex items-center justify-center p-4">
 
-    <h1>輸入您的出庫資料</h1>
-    <form id="dataForm">
-        <label for="Name">出庫人員代號:</label>
-        <input type="text" id="Name" required><br><br>
+    <!-- 表單容器卡片 -->
+    <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl space-y-6 border border-gray-100">
 
-        <label for="Message">器械條碼:</label>
-        <textarea id="Message" required></textarea><br><br>
-        
-        <label for="Messagee">出庫填1、歸還填2:</label>
-        <textarea id="Messagee" required></textarea><br><br>
+        <h1 class="text-3xl font-extrabold text-gray-900 text-center">器械出入庫記錄</h1>
+        <p class="text-center text-sm text-gray-500">請輸入出庫或歸還的相關資料。</p>
 
-        <button type="submit">儲存資料到 Google Sheets</button>
-    </form>
+        <form id="dataForm" class="space-y-5">
+            <!-- 欄位 1: 出庫人員代號 -->
+            <div>
+                <label for="Name" class="block text-sm font-medium text-gray-700 mb-1">出庫人員代號:</label>
+                <input 
+                    type="text" 
+                    id="Name" 
+                    required 
+                    placeholder="請輸入您的員工編號或代號"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                >
+            </div>
 
-    <p id="responseMessage"></p>
+            <!-- 欄位 2: 器械條碼 -->
+            <div>
+                <label for="Message" class="block text-sm font-medium text-gray-700 mb-1">器械條碼:</label>
+                <textarea 
+                    id="Message" 
+                    required 
+                    rows="4" 
+                    placeholder="請掃描或輸入多個條碼，每行一個"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                ></textarea>
+            </div>
+            
+            <!-- 欄位 3: 出庫/歸還 按鈕選擇 -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    操作類型：
+                </label>
+                <div class="flex space-x-4">
+                    <!-- 出庫 (預設, Value: 1) -->
+                    <label class="flex-1 flex items-center justify-center space-x-2 p-3 border rounded-lg cursor-pointer transition duration-150 ease-in-out hover:bg-blue-50 has-[:checked]:bg-blue-100 has-[:checked]:border-blue-500 shadow-sm">
+                        <input type="radio" name="actionType" value="1" id="Messagee_out" checked 
+                               class="text-blue-600 focus:ring-blue-500">
+                        <span class="text-base font-semibold text-gray-800">出庫</span>
+                    </label>
+
+                    <!-- 歸還 (Value: 2) -->
+                    <label class="flex-1 flex items-center justify-center space-x-2 p-3 border rounded-lg cursor-pointer transition duration-150 ease-in-out hover:bg-green-50 has-[:checked]:bg-green-100 has-[:checked]:border-green-500 shadow-sm">
+                        <input type="radio" name="actionType" value="2" id="Messagee_in"
+                               class="text-green-600 focus:ring-green-500">
+                        <span class="text-base font-semibold text-gray-800">歸還</span>
+                    </label>
+                </div>
+            </div>
+
+            <button 
+                type="submit"
+                class="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+                儲存資料到 Google Sheets
+            </button>
+        </form>
+
+        <!-- 響應訊息區域 -->
+        <p id="responseMessage" class="text-center font-medium min-h-[1.5rem]"></p>
+    </div>
 
     <script>
-        // *** 將此處替換為您在步驟二中獲得的「網路應用程式網址」 ***
+        // *** 將此處替換為您在 Google Apps Script 獲得的「網路應用程式網址」 ***
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWyobf4R0_bqo7rkEMjfggEFcIvhJjqMp8d-7-fS9a0FPEV4AUUO1dNzSKpVe3Ft__/exec';
+        
+        // 為了避免在 no-cors 模式下瀏覽器發出錯誤警告，這裡使用 try...catch 處理 fetch
+        async function submitData(payload) {
+            const messageElement = document.getElementById('responseMessage');
+            messageElement.textContent = '正在儲存中...';
+            messageElement.className = 'text-center font-medium text-blue-600';
+
+            try {
+                // 發送 POST 請求到 Apps Script API
+                await fetch(APPS_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', // 必須使用 no-cors，因為 Apps Script 不會回傳 CORS 標頭
+                    cache: 'no-cache',
+                    headers: {
+                        'Content-Type': 'application/json' 
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                // 由於是 no-cors 模式，我們只能假設請求已發送。
+                // 成功發送後，清理表單並給出成功訊息。
+                document.getElementById('dataForm').reset();
+                messageElement.textContent = '✅ 資料已成功發送！請檢查您的 Google Sheets 確認儲存。';
+                messageElement.className = 'text-center font-medium text-green-600';
+                
+                // 提交成功後，確保「出庫 (1)」按鈕保持選中
+                document.getElementById('Messagee_out').checked = true;
+
+            } catch (error) {
+                // 捕獲網路錯誤
+                console.error('Fetch error:', error);
+                messageElement.textContent = '❌ 發送失敗: 網路或設定錯誤。請檢查 Apps Script URL。';
+                messageElement.className = 'text-center font-medium text-red-600';
+            }
+
+            // 讓成功或失敗訊息在幾秒後自動消失
+            setTimeout(() => {
+                messageElement.textContent = '';
+                messageElement.className = 'text-center font-medium min-h-[1.5rem]';
+            }, 8000);
+        }
 
         document.getElementById('dataForm').addEventListener('submit', function(e) {
             e.preventDefault(); // 阻止表單預設提交行為
 
-            const form = e.target;
-            const messageElement = document.getElementById('responseMessage');
-            messageElement.textContent = '正在儲存中...';
-
             // 1. 收集表單數據
-            const payload = {
-                // 注意：這裡的鍵 (Key) 必須與您的 Google Sheet 第一行標題完全一致
-                // 例如：Google Sheet 標題是 "Name"，這裡的 Key 也要是 "Name"
-                Name: document.getElementById('Name').value,
-                Message: document.getElementById('Message').value
-                Messagee: document.getElementById('Messagee').value
-                // 'Timestamp' 欄位由 Apps Script 自動生成
-            };
+            const selectedAction = document.querySelector('input[name="actionType"]:checked');
 
-            // 2. 發送 POST 請求到 Apps Script API
-            fetch(APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors', // 必須使用 no-cors，因為 Apps Script 不會回傳 CORS 標頭
-                cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(response => {
-                // 由於是 no-cors 模式，我們無法檢查 response.ok 或解析 JSON 響應。
-                // 只能假設請求已發送，並在 Apps Script 中確認是否成功。
-                // 在實際專案中，您應使用更複雜的 CORS 設置或中介服務。
-                messageElement.textContent = '資料已發送！請檢查 Google Sheets 確認儲存成功。';
-                form.reset();
-            })
-            .catch(error => {
-                // 捕獲網路錯誤
-                messageElement.textContent = '發送失敗: ' + error.message;
-            });
+            const payload = {
+                // 這裡的鍵 (Key) 必須與您的 Google Sheet 第一行標題完全一致
+                Name: document.getElementById('Name').value,
+                Message: document.getElementById('Message').value,
+                // 從選中的 radio button 獲取值 (1 或 2)
+                Messagee: selectedAction ? selectedAction.value : '1' // 如果未選中，預設為 '1'
+                // 'Timestamp' 欄位應由 Apps Script 自動生成
+            };
+            
+            // 由於 radio button 已設置預設值，且值已確定為 1 或 2，故無需額外驗證。
+            
+            submitData(payload);
         });
     </script>
 
 </body>
-
 </html>
-
-
-
-
-
-
