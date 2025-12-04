@@ -5,15 +5,12 @@
 </head>
 <body>
 
-    <h1>輸入您的資料</h1>
+    <h1>輸入您的出庫資料</h1>
     <form id="dataForm">
-        <label for="Name">姓名:</label>
+        <label for="Name">出庫人員代號:</label>
         <input type="text" id="Name" required><br><br>
 
-        <label for="Email">電子郵件:</label>
-        <input type="email" id="Email" required><br><br>
-
-        <label for="Message">訊息:</label>
+        <label for="Message">器械條碼:</label>
         <textarea id="Message" required></textarea><br><br>
 
         <button type="submit">儲存資料到 Google Sheets</button>
@@ -37,7 +34,6 @@
                 // 注意：這裡的鍵 (Key) 必須與您的 Google Sheet 第一行標題完全一致
                 // 例如：Google Sheet 標題是 "Name"，這裡的 Key 也要是 "Name"
                 Name: document.getElementById('Name').value,
-                Email: document.getElementById('Email').value,
                 Message: document.getElementById('Message').value
                 // 'Timestamp' 欄位由 Apps Script 自動生成
             };
@@ -69,4 +65,5 @@
 </body>
 
 </html>
+
 
