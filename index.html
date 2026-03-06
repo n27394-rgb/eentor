@@ -3,200 +3,192 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>出入庫資料記錄</title>
-    <!-- 載入 Tailwind CSS CDN -->
+    <title>出入庫資料記錄系統</title>
+    <!-- 載入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* 確保字體清晰易讀 */
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f7f9fb;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f3f4f6;
         }
-        /* 針對多行輸入區域（器械條碼）的樣式調整 */
-        textarea {
-            resize: vertical;
-        }
-        /* 隱藏 radio button 的原生外觀 */
+        /* 自定義 Radio 按鈕樣式 */
         input[type="radio"] {
-            -webkit-appearance: none;
-            -moz-appearance: none;
             appearance: none;
-            width: 1rem;
-            height: 1rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #d1d5db;
             border-radius: 50%;
-            border: 2px solid theme('colors.gray.400');
+            outline: none;
             transition: all 0.2s;
+            position: relative;
         }
-        /* 選中時的樣式 */
         input[type="radio"]:checked {
-            border-width: 5px;
-            border-color: theme('colors.blue.600');
+            border-color: currentColor;
         }
-        /* 針對歸還按鈕選中時的樣式 */
-        #Messagee_in:checked {
-            border-color: theme('colors.green.600');
+        input[type="radio"]:checked::after {
+            content: '';
+            width: 0.625rem;
+            height: 0.625rem;
+            background-color: currentColor;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <!-- 表單容器卡片 -->
-    <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-2xl space-y-6 border border-gray-100">
+    <div class="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-100">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">出入庫管理</h1>
+            <p class="text-gray-500 mt-2">請確實填寫各項欄位以維護庫存準確性</p>
+        </div>
 
-        <h1 class="text-3xl font-extrabold text-gray-900 text-center">出入庫記錄</h1>
-        <p class="text-center text-sm text-gray-500">請輸入出庫或歸還的相關資料。</p>
-
-        <form id="dataForm" class="space-y-5">
-            <!-- 欄位 3: 器械條碼 -->
+        <form id="dataForm" class="space-y-6">
+            <!-- 日期欄位 -->
             <div>
-                <label for="Message33" class="block text-sm font-medium text-gray-700 mb-1">日期:</label>
-                <textarea 
+                <label for="Message33" class="block text-sm font-semibold text-gray-700 mb-1">日期：</label>
+                <input 
+                    type="date" 
                     id="Message33" 
                     required 
-                    rows="4" 
-                    placeholder="請掃描或輸入多個條碼，每行一個"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                ></textarea>
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                >
             </div>
-            
-            <!-- 欄位 1: 出庫人員代號 -->
+
+            <!-- 代號欄位 -->
             <div>
-                <label for="Name" class="block text-sm font-medium text-gray-700 mb-1">代號:</label>
+                <label for="Name" class="block text-sm font-semibold text-gray-700 mb-1">人員代號：</label>
                 <input 
                     type="text" 
                     id="Name" 
                     required 
-                    placeholder="請輸入代號"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
+                    placeholder="例如：EMP001"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
                 >
             </div>
 
-            <!-- 欄位 2: 器械條碼 -->
+            <!-- 數量欄位 (原 Message) -->
             <div>
-                <label for="Message" class="block text-sm font-medium text-gray-700 mb-1">數量:</label>
-                <textarea 
+                <label for="Message" class="block text-sm font-semibold text-gray-700 mb-1">數量：</label>
+                <input 
+                    type="number" 
                     id="Message" 
                     required 
-                    rows="4" 
-                    placeholder="請掃描或輸入多個條碼，每行一個"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                ></textarea>
+                    min="1"
+                    placeholder="請輸入數量"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                >
             </div>
-                        <!-- 欄位 3: 器械條碼 -->
+
+            <!-- 價錢欄位 (原 Message2) -->
             <div>
-                <label for="Message2" class="block text-sm font-medium text-gray-700 mb-1">價錢:</label>
-                <textarea 
+                <label for="Message2" class="block text-sm font-semibold text-gray-700 mb-1">單價/總價：</label>
+                <input 
+                    type="number" 
                     id="Message2" 
                     required 
-                    rows="4" 
-                    placeholder="請掃描或輸入多個條碼，每行一個"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 transition duration-150"
-                ></textarea>
+                    placeholder="請輸入金額"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition"
+                >
             </div>
-            
-            <!-- 欄位 3: 出庫/歸還 按鈕選擇 -->
+
+            <!-- 操作類型 -->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                    操作類型：
-                </label>
+                <span class="block text-sm font-semibold text-gray-700 mb-2">操作類型：</span>
                 <div class="flex space-x-4">
-                    <!-- 出庫 (預設, Value: 1) -->
-                    <label class="flex-1 flex items-center justify-center space-x-2 p-3 border rounded-lg cursor-pointer transition duration-150 ease-in-out hover:bg-blue-50 has-[:checked]:bg-blue-100 has-[:checked]:border-blue-500 shadow-sm">
-                        <input type="radio" name="actionType" value="1" id="Messagee_out" checked 
-                               class="text-blue-600 focus:ring-blue-500">
-                        <span class="text-base font-semibold text-gray-800">出庫</span>
+                    <label class="flex-1 flex items-center justify-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer transition has-[:checked]:border-blue-600 has-[:checked]:bg-blue-50 group">
+                        <input type="radio" name="actionType" value="1" id="Messagee_out" checked class="text-blue-600">
+                        <span class="ml-2 font-bold text-gray-700 group-has-[:checked]:text-blue-700">出庫</span>
                     </label>
 
-                    <!-- 歸還 (Value: 2) -->
-                    <label class="flex-1 flex items-center justify-center space-x-2 p-3 border rounded-lg cursor-pointer transition duration-150 ease-in-out hover:bg-green-50 has-[:checked]:bg-green-100 has-[:checked]:border-green-500 shadow-sm">
-                        <input type="radio" name="actionType" value="2" id="Messagee_in"
-                               class="text-green-600 focus:ring-green-500">
-                        <span class="text-base font-semibold text-gray-800">歸還</span>
+                    <label class="flex-1 flex items-center justify-center p-3 border-2 border-gray-200 rounded-xl cursor-pointer transition has-[:checked]:border-green-600 has-[:checked]:bg-green-50 group">
+                        <input type="radio" name="actionType" value="2" id="Messagee_in" class="text-green-600">
+                        <span class="ml-2 font-bold text-gray-700 group-has-[:checked]:text-green-700">歸還</span>
                     </label>
                 </div>
             </div>
 
             <button 
-                type="submit"
-                class="w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 ease-in-out shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                type="submit" 
+                id="submitBtn"
+                class="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-900 active:scale-[0.98] transition shadow-lg"
             >
-                儲存資料
+                送出並記錄
             </button>
         </form>
 
-        <!-- 響應訊息區域 -->
-        <p id="responseMessage" class="text-center font-medium min-h-[1.5rem]"></p>
+        <!-- 狀態回饋 -->
+        <div id="statusBox" class="mt-6 text-center text-sm font-medium hidden p-3 rounded-lg"></div>
     </div>
 
     <script>
-        // *** 將此處替換為您在 Google Apps Script 獲得的「網路應用程式網址」 ***
         const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxWyobf4R0_bqo7rkEMjfggEFcIvhJjqMp8d-7-fS9a0FPEV4AUUO1dNzSKpVe3Ft__/exec';
-        
-        // 為了避免在 no-cors 模式下瀏覽器發出錯誤警告，這裡使用 try...catch 處理 fetch
+
+        // 初始化日期為今天
+        document.getElementById('Message33').valueAsDate = new Date();
+
         async function submitData(payload) {
-            const messageElement = document.getElementById('responseMessage');
-            messageElement.textContent = '正在儲存中...';
-            messageElement.className = 'text-center font-medium text-blue-600';
+            const statusBox = document.getElementById('statusBox');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // UI 狀態切換
+            statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
+            statusBox.classList.add('bg-blue-100', 'text-blue-700');
+            statusBox.textContent = '⏱️ 資料傳輸中...';
+            submitBtn.disabled = true;
+            submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
             try {
-                // 發送 POST 請求到 Apps Script API
                 await fetch(APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors', // 必須使用 no-cors，因為 Apps Script 不會回傳 CORS 標頭
+                    mode: 'no-cors',
                     cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json' 
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
 
-                // 由於是 no-cors 模式，我們只能假設請求已發送。
-                // 成功發送後，清理表單並給出成功訊息。
-                document.getElementById('dataForm').reset();
-                messageElement.textContent = '✅ 資料已成功發送！確認儲存。';
-                messageElement.className = 'text-center font-medium text-green-600';
+                // 成功處理
+                statusBox.classList.replace('bg-blue-100', 'bg-green-100');
+                statusBox.classList.replace('text-blue-700', 'text-green-700');
+                statusBox.textContent = '✅ 資料儲存成功！';
                 
-                // 提交成功後，確保「出庫 (1)」按鈕保持選中
+                document.getElementById('dataForm').reset();
+                document.getElementById('Message33').valueAsDate = new Date();
                 document.getElementById('Messagee_out').checked = true;
 
             } catch (error) {
-                // 捕獲網路錯誤
-                console.error('Fetch error:', error);
-                messageElement.textContent = '❌ 發送失敗: 網路或設定錯誤。請檢查 Apps Script URL。';
-                messageElement.className = 'text-center font-medium text-red-600';
+                console.error('Error:', error);
+                statusBox.classList.replace('bg-blue-100', 'bg-red-100');
+                statusBox.classList.replace('text-blue-700', 'text-red-700');
+                statusBox.textContent = '❌ 發生錯誤，請稍後再試。';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                // 3秒後隱藏提示
+                setTimeout(() => statusBox.classList.add('hidden'), 5000);
             }
-
-            // 讓成功或失敗訊息在幾秒後自動消失
-            setTimeout(() => {
-                messageElement.textContent = '';
-                messageElement.className = 'text-center font-medium min-h-[1.5rem]';
-            }, 8000);
         }
 
         document.getElementById('dataForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // 阻止表單預設提交行為
+            e.preventDefault();
 
-            // 1. 收集表單數據
             const selectedAction = document.querySelector('input[name="actionType"]:checked');
 
+            // 構建 Payload
+            // 請確認 Google Sheet 標題欄位是否為以下名稱：
             const payload = {
-                // 這裡的鍵 (Key) 必須與您的 Google Sheet 第一行標題完全一致
-                Name: document.getElementById('Name').value,
-                Message: document.getElementById('Message').value,
-                // 從選中的 radio button 獲取值 (1 或 2)
-                Messagee: selectedAction ? selectedAction.value : '1' // 如果未選中，預設為 '1'
-                // 'Timestamp' 欄位應由 Apps Script 自動生成
+                Date: document.getElementById('Message33').value,      // 日期
+                Name: document.getElementById('Name').value,          // 代號
+                Amount: document.getElementById('Message').value,     // 數量
+                Price: document.getElementById('Message2').value,      // 價錢
+                Action: selectedAction ? selectedAction.value : '1'    // 出庫(1) 或 歸還(2)
             };
-            
-            // 由於 radio button 已設置預設值，且值已確定為 1 或 2，故無需額外驗證。
-            
+
             submitData(payload);
         });
     </script>
-
 </body>
 </html>
-
-
-
-
